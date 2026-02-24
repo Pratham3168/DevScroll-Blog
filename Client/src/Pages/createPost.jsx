@@ -91,8 +91,15 @@ const handleSubmit = async (e) => {
 
     e.preventDefault();
 
-    try{
+    // Validate API_BASE is set
+    if (!API_BASE || API_BASE === 'undefined') {
+      const errorMsg = "API URL is not configured. Please check environment variables.";
+      console.error(errorMsg, { API_BASE });
+      setPublishError(errorMsg);
+      return;
+    }
 
+    try{
         const res = await fetch(`${API_BASE}/api/post/create`,{
             method:"POST",
             headers:{
@@ -101,19 +108,40 @@ const handleSubmit = async (e) => {
             credentials:"include",
             body:JSON.stringify(formData),
         });
-        const data = await res.json();
+        
+        let data;
+        try {
+          data = await res.json();
+        } catch (parseErr) {
+          console.error("Failed to parse response:", parseErr, res.status);
+          setPublishError("Server returned invalid response");
+          return;
+        }
+
         if(!res.ok){
-            setPublishError(data.message || "Failed to publish post");
+            console.error("API error:", { status: res.status, message: data.message });
+            setPublishError(data.message || `Failed to publish post (${res.status})`);
             return;
         }
-        if(res.ok){
-            setPublishError(null);
-            navigate(`/post/${data.slug}`);
+
+        // Validate response includes required slug field
+        if(!data.slug) {
+          console.error("Response missing slug:", data);
+          setPublishError("Failed to create post: missing slug in response");
+          return;
         }
 
+        setPublishError(null);
+        console.log("Post created successfully:", { slug: data.slug });
+        
+        // Navigate to the new post
+        navigate(`/post/${data.slug}`);
 
     }catch(err){
-        setPublishError(handleError(err) || "Failed to publish post");
+        const errorMsg = err.message || "An error occurred while publishing";
+        console.error("Network/fetch error:", err);
+        setPublishError(errorMsg);
+        handleError(errorMsg);
     }
 
 }

@@ -21,19 +21,55 @@ export default function PostPage() {
         const fetchPost = async () => {
             try{
                 setLoading(true);
+
+                // Validate API_BASE is set
+                if (!API_BASE || API_BASE === 'undefined') {
+                    console.error("API URL is not configured", { API_BASE });
+                    setError(true);
+                    setLoading(false);
+                    return;
+                }
+
                 const res = await fetch(`${API_BASE}/api/post/getposts?slug=${postSlug}`);
-                const data = await res.json();
+                
+                let data;
+                try {
+                    data = await res.json();
+                } catch (err) {
+                    console.error("Failed to parse post response:", err, res.status);
+                    setError(true);
+                    setLoading(false);
+                    return;
+                }
+
                 if(!res.ok){
+                    console.error("Post fetch error:", { status: res.status, message: data?.message });
                     setError(true);
                     setLoading(false);
                     return ;
                 }
-                if(res.ok){
-                    setPost(data.posts[0]);
+
+                // Validate response has posts array
+                if(!data.posts || !Array.isArray(data.posts)) {
+                    console.error("Invalid post response structure:", data);
+                    setError(true);
                     setLoading(false);
-                    setError(false);
+                    return;
                 }
+
+                // Check if post was found
+                if(data.posts.length === 0) {
+                    console.warn("Post not found:", { slug: postSlug });
+                    setError(true);
+                    setLoading(false);
+                    return;
+                }
+
+                setPost(data.posts[0]);
+                setLoading(false);
+                setError(false);
             }catch(error){
+                console.error("Network error fetching post:", error);
                 setError(true);
                 setLoading(false);
             }

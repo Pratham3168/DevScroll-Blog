@@ -17,18 +17,24 @@ const cookieparser = require('cookie-parser');
 
 const allowedOrigins = [
   "http://localhost:5173",
-  process.env.CLIENT_URL
-];
+  "http://localhost:3000",
+  "https://dev-scroll-blog.vercel.app",
+  process.env.FRONTEND_URL || "" // Allow dynamic frontend URL for flexibility
+].filter(Boolean); // Remove empty strings
 
 app.use(cors({
   origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.error(`CORS blocked origin: ${origin}`);
       callback(new Error("Not allowed by CORS"));
     }
   },
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 app.use(cookieparser());
 

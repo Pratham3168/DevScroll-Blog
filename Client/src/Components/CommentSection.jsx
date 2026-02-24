@@ -18,8 +18,18 @@ export default function CommentSection({ postId }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (comment.length > 200) {
+      setCommentError("Comment must be less than 200 characters");
       return;
     }
+
+    // Validate API_BASE is set
+    if (!API_BASE || API_BASE === 'undefined') {
+      const errorMsg = "API URL is not configured. Please check environment variables.";
+      console.error(errorMsg, { API_BASE });
+      setCommentError(errorMsg);
+      return;
+    }
+
     try {
       const res = await fetch(`${API_BASE}/api/comment/create`, {
         method: "POST",
@@ -33,23 +43,43 @@ export default function CommentSection({ postId }) {
           userId: currentUser._id,
         }),
       });
-      let data = null;
 
+      let data = null;
       try {
         data = await res.json();
       } catch (err) {
-        data = null;
+        console.error("Failed to parse comment response:", err, res.status);
+        setCommentError("Server returned invalid response");
+        return;
       }
-        if (res.ok) {
-          setComment("");
-          setCommentError(null);
-          setComments([
-            { ...data, likes: data.likes || [], numberOfLikes: data.likes?.length ?? data.numberOfLikes ?? 0 },
-            ...comments,
-          ]);
+
+      if (!res.ok) {
+        console.error("Comment API error:", { status: res.status, message: data?.message });
+        setCommentError(data?.message || `Failed to post comment (${res.status})`);
+        return;
       }
+
+      // Validate response includes required fields
+      if (!data || !data._id) {
+        console.error("Response missing comment ID:", data);
+        setCommentError("Failed to post comment: invalid response");
+        return;
+      }
+
+      setComment("");
+      setCommentError(null);
+      setComments([
+        { 
+          ...data, 
+          likes: data.likes || [], 
+          numberOfLikes: data.likes?.length ?? data.numberOfLikes ?? 0 
+        },
+        ...comments,
+      ]);
+      console.log("Comment posted successfully");
     } catch (error) {
-      setCommentError(error.message);
+      console.error("Network error posting comment:", error);
+      setCommentError(error.message || "Failed to post comment");
     }
   };
 
