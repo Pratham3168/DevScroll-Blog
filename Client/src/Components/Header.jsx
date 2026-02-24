@@ -163,7 +163,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AiOutlineSearch, AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
-import { signoutSuccess } from "../redux/user/userSlice";
+import { signOut } from "../redux/user/userSlice";
 import { toggleTheme } from "../redux/theme/themeSlice";
 import { useState, useEffect } from "react";
 import { API_BASE } from "../utils";
@@ -205,7 +205,7 @@ export default function Header() {
       );
 
       if (res.ok) {
-        dispatch(signoutSuccess());
+        dispatch(signOut());
       }
     } catch (error) {
       console.log(error.message);

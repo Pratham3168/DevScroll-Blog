@@ -14,7 +14,7 @@ import {
   deleteUserFailure,
   deleteUserStart,
   deleteUserSuccess,
-  signoutSuccess,
+  signOut,
 } from "../redux/user/userSlice";
 import { Link } from "react-router-dom";
 import { Modal, ModalBody } from "flowbite-react";
@@ -210,7 +210,7 @@ export default function DashProfile() {
       if (!res.ok) {
         handleError(data.message);
       } else {
-        dispatch(signoutSuccess());
+        dispatch(signOut());
         const msg = "User signed out successfully";
         handleSuccess(msg);
       }
