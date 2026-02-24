@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+@plugin "@tailwindcss/typography";
+@plugin "flowbite/plugin";
+@plugin "tailwind-scrollbar";
+
+.btn {
+  @apply px-3 py-1 border rounded hover:bg-gray-200 text-sm;
+}
+
+body {
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+
+.post-content p {
+  margin-bottom: 0.75rem;
+  line-height: 1.7;
+}
+
+/* HEADINGS */
+.post-content h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 1.5rem 0 1rem 0;
+}
+
+.post-content h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 1.5rem 0 1rem 0;
+}
+
+.post-content h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 1.2rem 0 0.8rem 0;
+}
+
+/* LISTS */
+.post-content ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin: 1rem 0;
+}
+
+.post-content ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin: 1rem 0;
+}
+
+.post-content li {
+  margin: 0.5rem 0;
+}
+
+/* LINKS */
+.post-content a {
+  color: rgb(73, 149, 199);
+  text-decoration: none;
+}
+
+.post-content a:hover {
+  text-decoration: underline;
+}
+
+/* BLOCKQUOTE */
+.post-content blockquote {
+  border-left: 4px solid #d1d5db;
+  padding-left: 1rem;
+  margin: 1rem 0;
+  font-style: italic;
+  color: #374151;
+}
+
+/* CODE BLOCK */
+.post-content pre {
+  background-color: rgb(30, 41, 59);
+  border: 1px solid rgb(61, 69, 83);
+  color: rgb(232, 231, 231);
+  padding: 1rem;
+  border-radius: 0.75rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+  font-family: "Fira Code", monospace;
+  font-size: 0.9rem;
+}
+
+/* Remove inline styling inside pre */
+.post-content pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+}
+
+/* INLINE CODE */
+.post-content p code,
+.post-content li code {
+  background-color: rgb(236, 236, 236);
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.35rem;
+  font-size: 0.85rem;
+  font-family: "Fira Code", monospace;
+}
+
+.dark .post-content p code,
+.dark .post-content li code {
+  background-color: rgb(30, 41, 59);
+  border: 1px solid rgb(61, 69, 83);
+}
