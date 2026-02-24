@@ -16,6 +16,7 @@ export default function CreatePost() {
   const [imageUploadError, setImageUploadError] = useState(null);
   const [formData, setFormData] = useState({});
   const {mode} = useSelector((state) => state.theme);
+  const { token } = useSelector((state) => state.user); // Get token from Redux
   const [publishError, setPublishError] = useState(null);
   const navigate = useNavigate();
 
@@ -100,12 +101,19 @@ const handleSubmit = async (e) => {
     }
 
     try{
+        const headers = {
+            "Content-Type": "application/json",
+        };
+
+        // Add Authorization header with token
+        if (token) {
+          headers["Authorization"] = `Bearer ${token}`;
+        }
+
         const res = await fetch(`${API_BASE}/api/post/create`,{
             method:"POST",
-            headers:{
-                "Content-Type":"application/json",  
-            },
-            credentials:"include",
+            headers,
+            credentials:"include", // Still include cookies as fallback
             body:JSON.stringify(formData),
         });
         

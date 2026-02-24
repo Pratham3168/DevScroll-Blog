@@ -1,10 +1,10 @@
 const jwt = require('jsonwebtoken');
 
 const verifyToken = (req, res, next) => {
-    // Try cookie token first, then Authorization header (Bearer)
+    // Try Authorization header first (most reliable for cross-origin), then cookies as fallback
     let token = null;
     
-    // Debug logging (remove in production after testing)
+    // Debug logging
     const debugInfo = {
       hasCookies: !!req.cookies,
       cookieKeys: req.cookies ? Object.keys(req.cookies) : [],
@@ -17,18 +17,18 @@ const verifyToken = (req, res, next) => {
       cookieValue: req.cookies?.token ? `${req.cookies.token.substring(0, 20)}...` : 'none',
     });
 
-    // Check cookies first
-    if (req.cookies && req.cookies.token) {
+    // Check Authorization header FIRST (primary method)
+    if (req.headers && req.headers.authorization) {
+      const parts = req.headers.authorization.split(' ');
+      if (parts.length === 2 && parts[0] === 'Bearer') {
+        token = parts[1];
+        console.log('✅ Token found in Authorization header');
+      }
+    } 
+    // Fallback: check cookies (for backward compatibility)
+    else if (req.cookies && req.cookies.token) {
       token = req.cookies.token;
       console.log('✅ Token found in cookies');
-    } 
-    // Fallback: check Authorization header
-    else if (req.headers && req.headers.authorization) {
-        const parts = req.headers.authorization.split(' ');
-        if (parts.length === 2 && parts[0] === 'Bearer') {
-          token = parts[1];
-          console.log('✅ Token found in Authorization header');
-        }
     }
 
     if (!token) {

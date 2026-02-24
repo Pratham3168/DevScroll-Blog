@@ -54,6 +54,7 @@ try {
 
 const initialState = {
   currentUser: storedUser,
+  token: localStorage.getItem("token") || null,
   error: null,
   loading: false,
 };
@@ -69,9 +70,11 @@ const userSlice = createSlice({
 
     signInSuccess: (state, action) => {
       state.currentUser = action.payload.user;
+      state.token = action.payload.token; // Store token from response
       state.loading = false;
       state.error = null;
       localStorage.setItem("user", JSON.stringify(action.payload.user));
+      localStorage.setItem("token", action.payload.token); // Persist token
     },
 
     signInFailure: (state, action) => {
@@ -79,9 +82,15 @@ const userSlice = createSlice({
       state.error = action.payload;
     },
 
-    
+    signOut: (state) => {
+      state.currentUser = null;
+      state.token = null;
+      state.error = null;
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+    },
 
-     updateStart: (state) => {
+    updateStart: (state) => {
       state.loading = true;
       state.error = null;
     },
@@ -108,13 +117,6 @@ const userSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
-    signoutSuccess: (state) => {
-      state.currentUser = null;
-      state.loading = false;
-      state.error = null;
-      localStorage.removeItem("user");
-    },
-
   },
 });
 
@@ -122,7 +124,7 @@ export const {
   signInStart,
   signInSuccess,
   signInFailure,
-  signoutSuccess,   // export it
+  signOut,
   updateStart,
   updateSuccess,
   updateFailure,

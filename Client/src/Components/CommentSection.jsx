@@ -7,7 +7,7 @@ import { handleError, API_BASE } from "../utils";
 import Comment from "./Comments";
 
 export default function CommentSection({ postId }) {
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, token } = useSelector((state) => state.user); // Get token from Redux
   const { mode } = useSelector((state) => state.theme);
   const [comment, setComment] = useState("");
   const [commentError, setCommentError] = useState(null);
@@ -31,12 +31,19 @@ export default function CommentSection({ postId }) {
     }
 
     try {
+      const headers = {
+        "Content-Type": "application/json",
+      };
+
+      // Add Authorization header with token
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+
       const res = await fetch(`${API_BASE}/api/comment/create`, {
         method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        credentials: "include", // Still include cookies as fallback
+        headers,
         body: JSON.stringify({
           content: comment,
           postId,
