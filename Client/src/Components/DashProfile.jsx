@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { HiEye, HiEyeOff } from "react-icons/hi";
-import { handleError, handleSuccess } from "../utils";
+import { handleError, handleSuccess, API_BASE } from "../utils";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
@@ -145,7 +145,7 @@ export default function DashProfile() {
     try {
       dispatch(updateStart());
       const res = await fetch(
-        `http://localhost:2068/api/user/update/${currentUser._id}`,
+        `${API_BASE}/api/user/update/${currentUser._id}`,
         {
           method: "PUT",
           credentials: "include",
@@ -179,7 +179,7 @@ export default function DashProfile() {
     try {
       dispatch(deleteUserStart());
       const res = await fetch(
-        `http://localhost:2068/api/user/delete/${currentUser._id}`,
+        `${API_BASE}/api/user/delete/${currentUser._id}`,
         {
           method: "DELETE",
           credentials: "include",
@@ -202,7 +202,7 @@ export default function DashProfile() {
 
   const handleSignOut = async () => {
     try {
-      const res = await fetch("http://localhost:2068/api/user/signout", {
+      const res = await fetch(`${API_BASE}/api/user/signout`, {
         method: "POST",
         credentials: "include",
       });

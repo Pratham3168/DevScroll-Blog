@@ -22,6 +22,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { FiCheck } from "react-icons/fi";
 import { FaCheck, FaTimes } from "react-icons/fa";
+import { API_BASE } from "../utils";
 
 export default function DashUsers() {
 
@@ -38,7 +39,7 @@ export default function DashUsers() {
     const fetchUsers = async () => {
       try {
         const res = await fetch(
-          `http://localhost:2068/api/user/getusers`,
+          `${API_BASE}/api/user/getusers`,
           {credentials: 'include'}
         );
         const data = await res.json();
@@ -67,7 +68,7 @@ export default function DashUsers() {
       const startIndex = users.length;
 
       const res = await fetch(
-        `http://localhost:2068/api/post/getusers?startIndex=${startIndex}`
+        `${API_BASE}/api/post/getusers?startIndex=${startIndex}`
       );
 
       const data = await res.json();
@@ -89,7 +90,7 @@ export default function DashUsers() {
 
     try{
 
-      const res = await fetch(`http://localhost:2068/api/user/delete/${userIdToDelete}`, {
+      const res = await fetch(`${API_BASE}/api/user/delete/${userIdToDelete}`, {
         method:'DELETE',
         credentials:'include',
       });

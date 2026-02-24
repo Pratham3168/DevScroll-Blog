@@ -8,6 +8,7 @@ import {
 } from 'react-icons/hi';
 import { Table, TableHead, TableBody,TableHeadCell,TableRow,TableCell } from 'flowbite-react';
 import { Link } from 'react-router-dom';
+import { API_BASE } from '../utils';
 
 
 
@@ -30,7 +31,7 @@ export default function DashComp() {
     const fetchUsers = async () => {
       try {
         const res = await fetch(
-          `http://localhost:2068/api/user/getusers?limit=5`,
+          `${API_BASE}/api/user/getusers?limit=5`,
           {
             credentials: 'include',
           }
@@ -48,7 +49,7 @@ export default function DashComp() {
     const fetchPosts = async () => {
       try {
         const res = await fetch(
-          `http://localhost:2068/api/post/getposts?limit=5`,
+          `${API_BASE}/api/post/getposts?limit=5`,
           {
             credentials: 'include',
           }
@@ -66,7 +67,7 @@ export default function DashComp() {
     const fetchComments = async () => {
       try {
         const res = await fetch(
-          `http://localhost:2068/api/comment/getcomments?limit=5`,
+          `${API_BASE}/api/comment/getcomments?limit=5`,
           {
             credentials: 'include',
           }

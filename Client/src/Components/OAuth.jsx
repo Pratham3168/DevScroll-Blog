@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { signInSuccess } from '../redux/user/userSlice';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { API_BASE } from '../utils';
 
 export default function OAuth() {
 
@@ -23,7 +24,7 @@ export default function OAuth() {
     provider.setCustomParameters({prompt : 'select_account'});
     try{
         const resultsFromGoogle = await signInWithPopup(auth,provider);
-        const res = await fetch("http://localhost:2068/api/auth/google" , {
+        const res = await fetch(`${API_BASE}/api/auth/google` , {
             method : 'POST',
             credentials : 'include',
             headers : { 'Content-Type' : 'application/json' },

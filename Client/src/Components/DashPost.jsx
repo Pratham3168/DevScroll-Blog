@@ -20,6 +20,7 @@ import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { API_BASE } from "../utils";
 
 export default function DashPost() {
 
@@ -36,7 +37,7 @@ export default function DashPost() {
     const fetchPosts = async () => {
       try {
         const res = await fetch(
-          `http://localhost:2068/api/post/getposts?userId=${currentUser._id}`
+          `${API_BASE}/api/post/getposts?userId=${currentUser._id}`
         );
         const data = await res.json();
 
@@ -61,7 +62,7 @@ export default function DashPost() {
   const handleDeletePost = async () => {
     try {
       const res = await fetch(
-        `http://localhost:2068/api/post/deletepost/${postIdToDelete}/${currentUser._id}`,
+        `${API_BASE}/api/post/deletepost/${postIdToDelete}/${currentUser._id}`,
         { method: "DELETE", credentials: 'include' }
       );
 
@@ -81,7 +82,7 @@ export default function DashPost() {
       const startIndex = userPosts.length;
 
       const res = await fetch(
-        `http://localhost:2068/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`
+        `${API_BASE}/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`
       );
 
       const data = await res.json();

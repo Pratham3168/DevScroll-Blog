@@ -167,7 +167,7 @@
 
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { handleError, handleSuccess } from "../utils.jsx";
+import { handleError, handleSuccess, API_BASE } from "../utils.jsx";
 import { ToastContainer } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -206,7 +206,7 @@ const Signin = () => {
       dispatch(signInStart());
 
       const response = await fetch(
-        "http://localhost:2068/api/auth/signin",
+        `${API_BASE}/api/auth/signin`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

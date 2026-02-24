@@ -22,6 +22,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { FiCheck } from "react-icons/fi";
 import { FaCheck, FaTimes } from "react-icons/fa";
+import { API_BASE } from "../utils";
 
 export default function DashComments() {
 
@@ -38,7 +39,7 @@ export default function DashComments() {
     const fetchComments = async () => {
       try {
         const res = await fetch(
-          `http://localhost:2068/api/comment/getcomments`,
+          `${API_BASE}/api/comment/getcomments`,
           {credentials: 'include'}
         );
         const data = await res.json();
@@ -67,7 +68,7 @@ export default function DashComments() {
       const startIndex = comments.length;
 
       const res = await fetch(
-        `http://localhost:2068/api/comment/getcomments?startIndex=${startIndex}`
+        `${API_BASE}/api/comment/getcomments?startIndex=${startIndex}`
       );
 
       const data = await res.json();
@@ -89,7 +90,7 @@ export default function DashComments() {
 
     try{
 
-      const res = await fetch(`http://localhost:2068/api/comment/deleteComment/${commentIdToDelete}`, {
+      const res = await fetch(`${API_BASE}/api/comment/deleteComment/${commentIdToDelete}`, {
         method:'DELETE',
         credentials:'include',
       });

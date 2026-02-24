@@ -75,6 +75,7 @@ import {
   HiGlobe,
 } from "react-icons/hi";
 import { useSelector } from "react-redux";
+import { API_BASE } from "../utils";
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
@@ -84,7 +85,7 @@ export default function Home() {
   useEffect(() => {
     const fetchPosts = async () => {
       const res = await fetch(
-        `http://localhost:2068/api/post/getPosts`
+        `${API_BASE}/api/post/getPosts`
       );
       const data = await res.json();
       setPosts(data.posts);

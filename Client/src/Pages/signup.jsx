@@ -168,7 +168,7 @@
 
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { handleError, handleSuccess } from "../utils.jsx";
+import { handleError, handleSuccess, API_BASE } from "../utils.jsx";
 import { ToastContainer } from "react-toastify";
 import OAuth from "../Components/OAuth.jsx";
 import { useSelector } from "react-redux";
@@ -202,7 +202,7 @@ const Signup = () => {
     try {
       setIsLoading(true);
 
-      const url = "http://localhost:2068/api/auth/signup";
+      const url = `${API_BASE}/api/auth/signup`;
       const response = await fetch(url, {
         method: "POST",
         headers: {

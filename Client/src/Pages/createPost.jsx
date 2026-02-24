@@ -2,7 +2,7 @@ import { Alert, Button, FileInput, Select, TextInput } from "flowbite-react";
 import React, { useState } from "react";
 import PostEditor from "../Components/PostEditor";
 import axios from "axios";
-import { handleError } from "../utils";
+import { handleError, API_BASE } from "../utils";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { useNavigate  } from "react-router-dom";
@@ -93,7 +93,7 @@ const handleSubmit = async (e) => {
 
     try{
 
-        const res = await fetch("http://localhost:2068/api/post/create",{
+        const res = await fetch(`${API_BASE}/api/post/create`,{
             method:"POST",
             headers:{
                 "Content-Type":"application/json",  

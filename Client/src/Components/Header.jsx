@@ -166,6 +166,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { signoutSuccess } from "../redux/user/userSlice";
 import { toggleTheme } from "../redux/theme/themeSlice";
 import { useState, useEffect } from "react";
+import { API_BASE } from "../utils";
 
 export default function Header() {
   const { pathname, search } = useLocation();
@@ -196,7 +197,7 @@ export default function Header() {
   const handleSignOut = async () => {
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/user/signout`,
+        `${API_BASE}/api/user/signout`,
         {
           method: "POST",
           credentials: "include",

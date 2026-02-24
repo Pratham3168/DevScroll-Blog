@@ -3,7 +3,7 @@ import { ToastContainer } from "react-toastify";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { handleError } from "../utils";
+import { handleError, API_BASE } from "../utils";
 import Comment from "./Comments";
 
 export default function CommentSection({ postId }) {
@@ -21,7 +21,7 @@ export default function CommentSection({ postId }) {
       return;
     }
     try {
-      const res = await fetch(`http://localhost:2068/api/comment/create`, {
+      const res = await fetch(`${API_BASE}/api/comment/create`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -57,7 +57,7 @@ export default function CommentSection({ postId }) {
     const fetchComments = async () => {
       try {
         const res = await fetch(
-          `http://localhost:2068/api/comment/getComment?postId=${postId}`,
+          `${API_BASE}/api/comment/getComment?postId=${postId}`,
         );
         const data = await res.json();
         if (res.ok) {
@@ -85,7 +85,7 @@ export default function CommentSection({ postId }) {
         return;
       }
       const res = await fetch(
-        `http://localhost:2068/api/comment/likeComment/${commentId}`,
+        `${API_BASE}/api/comment/likeComment/${commentId}`,
         {
           method: 'PUT',
           credentials: 'include',
@@ -126,7 +126,7 @@ export default function CommentSection({ postId }) {
         return;
       }
       const res = await fetch(
-        `http://localhost:2068/api/comment/deleteComment/${commentId}`,
+        `${API_BASE}/api/comment/deleteComment/${commentId}`,
         {
           method: 'DELETE',
           credentials: 'include',

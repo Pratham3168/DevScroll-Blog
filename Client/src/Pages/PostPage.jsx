@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import CommentSection from '../Components/CommentSection';
 import PostCard from '../Components/PostCard';
+import { API_BASE } from '../utils';
 
 
 export default function PostPage() {
@@ -20,7 +21,7 @@ export default function PostPage() {
         const fetchPost = async () => {
             try{
                 setLoading(true);
-                const res = await fetch(`http://localhost:2068/api/post/getposts?slug=${postSlug}`);
+                const res = await fetch(`${API_BASE}/api/post/getposts?slug=${postSlug}`);
                 const data = await res.json();
                 if(!res.ok){
                     setError(true);
@@ -46,7 +47,7 @@ export default function PostPage() {
     try {
       const fetchRecentPosts = async () => {
         const res = await fetch(
-          `http://localhost:2068/api/post/getposts?limit=3`
+          `${API_BASE}/api/post/getposts?limit=3`
         );
         const data = await res.json();
         if (res.ok) {
