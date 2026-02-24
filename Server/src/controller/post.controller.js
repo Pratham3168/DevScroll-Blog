@@ -2,11 +2,26 @@ const Post = require('../models/post.model');
 
 const createPost = async (req, res, next) => {
   try {
+    // Debug: Check if user is authenticated
+    console.log('📝 Creating post - User info:', {
+      hasUser: !!req.user,
+      userId: req.user?.id,
+      isAdmin: req.user?.isAdmin,
+    });
+
     if (!req.user || !req.user.isAdmin) {
+      console.error('❌ Post creation denied - User not admin or not authenticated', {
+        hasUser: !!req.user,
+        isAdmin: req.user?.isAdmin,
+      });
       return res.status(403).json({ message: 'Only admin can create posts' });
     }
 
     if (!req.body || !req.body.content || !req.body.title) {
+      console.error('❌ Post creation failed - Missing required fields', {
+        hasTitle: !!req.body?.title,
+        hasContent: !!req.body?.content,
+      });
       return res.status(400).json({ message: 'Content and title are required' });
     }
 
@@ -23,8 +38,10 @@ const createPost = async (req, res, next) => {
     });
 
     const savedPost = await newPost.save();
+    console.log('✅ Post created successfully:', { postId: savedPost._id, slug });
     res.status(201).json(savedPost);
   } catch (error) {
+    console.error('❌ Post creation error:', error.message);
     next(error);
   }
 };
