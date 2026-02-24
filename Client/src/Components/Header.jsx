@@ -173,11 +173,18 @@ export default function Header() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, token } = useSelector((state) => state.user);
   const { mode } = useSelector((state) => state.theme);
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [profileOpen, setProfileOpen] = useState(false);
+  const buildAuthHeaders = () => {
+    const headers = {};
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+    return headers;
+  };
 
   useEffect(() => {
     const urlParams = new URLSearchParams(search);
@@ -201,6 +208,7 @@ export default function Header() {
         {
           method: "POST",
           credentials: "include",
+          headers: buildAuthHeaders(),
         },
       );
 

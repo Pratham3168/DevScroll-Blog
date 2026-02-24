@@ -26,7 +26,7 @@ import { API_BASE } from "../utils";
 
 export default function DashComments() {
 
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, token } = useSelector((state) => state.user);
 
   const [comments, setComments] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -34,13 +34,23 @@ export default function DashComments() {
 
   const [commentIdToDelete, setCommentIdToDelete] = useState(null);
   const [showMore, setShowMore] = useState(false);
+  const buildAuthHeaders = () => {
+    const headers = {};
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+    return headers;
+  };
 
   useEffect(() => {
     const fetchComments = async () => {
       try {
         const res = await fetch(
           `${API_BASE}/api/comment/getcomments`,
-          {credentials: 'include'}
+          {
+            credentials: "include",
+            headers: buildAuthHeaders(),
+          }
         );
         const data = await res.json();
 
@@ -68,7 +78,11 @@ export default function DashComments() {
       const startIndex = comments.length;
 
       const res = await fetch(
-        `${API_BASE}/api/comment/getcomments?startIndex=${startIndex}`
+        `${API_BASE}/api/comment/getcomments?startIndex=${startIndex}`,
+        {
+          credentials: "include",
+          headers: buildAuthHeaders(),
+        }
       );
 
       const data = await res.json();
@@ -91,8 +105,9 @@ export default function DashComments() {
     try{
 
       const res = await fetch(`${API_BASE}/api/comment/deleteComment/${commentIdToDelete}`, {
-        method:'DELETE',
-        credentials:'include',
+        method: "DELETE",
+        credentials: "include",
+        headers: buildAuthHeaders(),
       });
       const data = await res.json();
       if(res.ok){

@@ -24,7 +24,14 @@ export default function DashComp() {
   const [lastMonthUsers, setLastMonthUsers] = useState(0);
   const [lastMonthPosts, setLastMonthPosts] = useState(0);
   const [lastMonthComments, setLastMonthComments] = useState(0);
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, token } = useSelector((state) => state.user);
+  const buildAuthHeaders = () => {
+    const headers = {};
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+    return headers;
+  };
 
 
   useEffect(() => {
@@ -34,6 +41,7 @@ export default function DashComp() {
           `${API_BASE}/api/user/getusers?limit=5`,
           {
             credentials: 'include',
+            headers: buildAuthHeaders(),
           }
         );
         const data = await res.json();
@@ -52,6 +60,7 @@ export default function DashComp() {
           `${API_BASE}/api/post/getposts?limit=5`,
           {
             credentials: 'include',
+            headers: buildAuthHeaders(),
           }
         );
         const data = await res.json();
@@ -70,6 +79,7 @@ export default function DashComp() {
           `${API_BASE}/api/comment/getcomments?limit=5`,
           {
             credentials: 'include',
+            headers: buildAuthHeaders(),
           }
         );
         const data = await res.json();

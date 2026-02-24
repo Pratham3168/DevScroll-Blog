@@ -15,6 +15,13 @@ export default function CommentSection({ postId }) {
   const [showModal, setShowModal] = useState(false);
   const [commentToDelete, setCommentToDelete] = useState(null);
   const navigate = useNavigate();
+  const buildAuthHeaders = () => {
+    const headers = {};
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+    return headers;
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (comment.length > 200) {
@@ -95,6 +102,10 @@ export default function CommentSection({ postId }) {
       try {
         const res = await fetch(
           `${API_BASE}/api/comment/getComment?postId=${postId}`,
+          {
+            credentials: 'include',
+            headers: buildAuthHeaders(),
+          }
         );
         const data = await res.json();
         if (res.ok) {
@@ -126,6 +137,7 @@ export default function CommentSection({ postId }) {
         {
           method: 'PUT',
           credentials: 'include',
+          headers: buildAuthHeaders(),
         }
       );
       if (res.ok) {
@@ -167,6 +179,7 @@ export default function CommentSection({ postId }) {
         {
           method: 'DELETE',
           credentials: 'include',
+          headers: buildAuthHeaders(),
         }
       );
       if (res.ok) {

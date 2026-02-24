@@ -10,12 +10,23 @@ export default function Comment({ comment ,onLike ,onEdit ,onDelete}) {
   const [isEditing, setIsEditing] = useState(false);
   const {mode} = useSelector((state) => state.theme);
   const [editedContent, setEditedContent] = useState(comment.content);
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, token } = useSelector((state) => state.user);
+  const buildAuthHeaders = () => {
+    const headers = {};
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+    return headers;
+  };
   useEffect(() => {
     const getUser = async () => {
       try {
         const res = await fetch(
-          `${API_BASE}/api/user/${comment.userId}`
+          `${API_BASE}/api/user/${comment.userId}`,
+          {
+            credentials: 'include',
+            headers: buildAuthHeaders(),
+          }
         );
         const data = await res.json();
         if (res.ok) {
@@ -44,6 +55,7 @@ export default function Comment({ comment ,onLike ,onEdit ,onDelete}) {
           credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
+            ...buildAuthHeaders(),
           },
           body: JSON.stringify({
             content: editedContent,

@@ -19,19 +19,26 @@ export default function UpdatePost() {
   const {mode} = useSelector((state) => state.theme);
   const [publishError, setPublishError] = useState(null);
   const { postId } = useParams();
-    const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, token } = useSelector((state) => state.user);
   const navigate = useNavigate();
+
+  const buildAuthHeaders = () => {
+    const headers = {};
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+    return headers;
+  };
 
 
 
   useEffect(() => {
     try{
       const fetchPostData = async () => {
-        const res = await fetch(`${API_BASE}/api/post/getposts?postId=${postId}`,
-          {
-            credentials:"include",  
-          }
-        );
+        const res = await fetch(`${API_BASE}/api/post/getposts?postId=${postId}`, {
+          credentials: "include",
+          headers: buildAuthHeaders(),
+        });
         const data = await res.json();
         if(!res.ok){
           setPublishError(data.message || "Failed to fetch post data");
@@ -127,13 +134,14 @@ const handleSubmit = async (e) => {
 
     try{
 
-        const res = await fetch(`${API_BASE}/api/post/updatepost/${postId}/${currentUser._id}`,{
-            method:"PUT",
-            headers:{
-                "Content-Type":"application/json",  
-            },
-            credentials:"include",
-            body:JSON.stringify(formData),
+        const res = await fetch(`${API_BASE}/api/post/updatepost/${postId}/${currentUser._id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            ...buildAuthHeaders(),
+          },
+          credentials: "include",
+          body: JSON.stringify(formData),
         });
         const data = await res.json();
         if(!res.ok){

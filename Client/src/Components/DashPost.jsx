@@ -24,7 +24,7 @@ import { API_BASE } from "../utils";
 
 export default function DashPost() {
 
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, token } = useSelector((state) => state.user);
 
   const [userPosts, setUserPosts] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -32,12 +32,23 @@ export default function DashPost() {
 
   const [postIdToDelete, setPostIdToDelete] = useState(null);
   const [showMore, setShowMore] = useState(false);
+  const buildAuthHeaders = () => {
+    const headers = {};
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+    return headers;
+  };
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const res = await fetch(
-          `${API_BASE}/api/post/getposts?userId=${currentUser._id}`
+          `${API_BASE}/api/post/getposts?userId=${currentUser._id}`,
+          {
+            credentials: "include",
+            headers: buildAuthHeaders(),
+          }
         );
         const data = await res.json();
 
@@ -63,7 +74,11 @@ export default function DashPost() {
     try {
       const res = await fetch(
         `${API_BASE}/api/post/deletepost/${postIdToDelete}/${currentUser._id}`,
-        { method: "DELETE", credentials: 'include' }
+        {
+          method: "DELETE",
+          credentials: "include",
+          headers: buildAuthHeaders(),
+        }
       );
 
       if (res.ok) {
@@ -82,7 +97,11 @@ export default function DashPost() {
       const startIndex = userPosts.length;
 
       const res = await fetch(
-        `${API_BASE}/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`
+        `${API_BASE}/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`,
+        {
+          credentials: "include",
+          headers: buildAuthHeaders(),
+        }
       );
 
       const data = await res.json();

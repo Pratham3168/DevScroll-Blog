@@ -20,7 +20,7 @@ import { Link } from "react-router-dom";
 import { Modal, ModalBody } from "flowbite-react";
 
 export default function DashProfile() {
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, token } = useSelector((state) => state.user);
   const { mode } = useSelector((state) => state.theme);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({});
@@ -33,6 +33,13 @@ export default function DashProfile() {
   const [updateUserSuccess, setUpdateUserSuccess] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
+  const buildAuthHeaders = () => {
+    const headers = {};
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+    return headers;
+  };
 
   const filePickerRef = useRef();
 
@@ -151,6 +158,7 @@ export default function DashProfile() {
           credentials: "include",
           headers: {
             "Content-Type": "application/json",
+            ...buildAuthHeaders(),
           },
           body: JSON.stringify(formData),
         },
@@ -183,6 +191,7 @@ export default function DashProfile() {
         {
           method: "DELETE",
           credentials: "include",
+          headers: buildAuthHeaders(),
         },
       );
       const data = await res.json();
@@ -205,6 +214,7 @@ export default function DashProfile() {
       const res = await fetch(`${API_BASE}/api/user/signout`, {
         method: "POST",
         credentials: "include",
+        headers: buildAuthHeaders(),
       });
       const data = await res.json();
       if (!res.ok) {

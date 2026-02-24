@@ -82,8 +82,15 @@ export default function DashSidebar() {
     const { mode } = useSelector((state) => state.theme);
 
   const dispatch = useDispatch();
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, token } = useSelector((state) => state.user);
   const [tab, setTab] = useState('');
+  const buildAuthHeaders = () => {
+    const headers = {};
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+    return headers;
+  };
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const tabFromUrl = urlParams.get('tab');
@@ -98,6 +105,7 @@ export default function DashSidebar() {
         {
           method: 'POST',
           credentials: 'include',
+          headers: buildAuthHeaders(),
         }
       );
       const data = await res.json();

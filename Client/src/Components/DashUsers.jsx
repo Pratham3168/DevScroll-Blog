@@ -26,7 +26,7 @@ import { API_BASE } from "../utils";
 
 export default function DashUsers() {
 
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, token } = useSelector((state) => state.user);
 
   const [users, setUsers] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -35,12 +35,23 @@ export default function DashUsers() {
 
   const [showMore, setShowMore] = useState(false);
 
+  const buildAuthHeaders = () => {
+    const headers = {};
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+    return headers;
+  };
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const res = await fetch(
           `${API_BASE}/api/user/getusers`,
-          {credentials: 'include'}
+          {
+            credentials: "include",
+            headers: buildAuthHeaders(),
+          }
         );
         const data = await res.json();
 
@@ -68,7 +79,11 @@ export default function DashUsers() {
       const startIndex = users.length;
 
       const res = await fetch(
-        `${API_BASE}/api/post/getusers?startIndex=${startIndex}`
+        `${API_BASE}/api/post/getusers?startIndex=${startIndex}`,
+        {
+          credentials: "include",
+          headers: buildAuthHeaders(),
+        }
       );
 
       const data = await res.json();
@@ -92,7 +107,8 @@ export default function DashUsers() {
 
       const res = await fetch(`${API_BASE}/api/user/delete/${userIdToDelete}`, {
         method:'DELETE',
-        credentials:'include',
+        credentials: "include",
+        headers: buildAuthHeaders(),
       });
       const data = await res.json();
       if(res.ok){
