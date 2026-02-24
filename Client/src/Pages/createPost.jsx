@@ -119,8 +119,24 @@ const handleSubmit = async (e) => {
         }
 
         if(!res.ok){
-            console.error("API error:", { status: res.status, message: data.message });
-            setPublishError(data.message || `Failed to publish post (${res.status})`);
+            let errorMsg = data.message || `Failed to publish post (${res.status})`;
+            
+            // Specific handling for auth errors
+            if (res.status === 401) {
+              errorMsg = "Authentication failed. Please sign in again and try creating the post.";
+              console.error("401 Unauthorized - Token may be missing or expired:", {
+                status: res.status,
+                message: data.message,
+                serverMessage: data,
+                hasCredentials: true
+              });
+            } else if (res.status === 403) {
+              errorMsg = "You don't have permission to create posts. Only admins can create posts.";
+              console.error("403 Forbidden:", { status: res.status, message: data.message });
+            }
+            
+            console.error("API error:", { status: res.status, message: data.message, errorMsg });
+            setPublishError(errorMsg);
             return;
         }
 

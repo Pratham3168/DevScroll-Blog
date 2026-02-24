@@ -81,8 +81,8 @@ const signin = async (req, res) => {
     res
       .cookie("token", token, {
         httpOnly: true,
-        secure: false,
-        sameSite: "strict",
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
         maxAge: 6 * 60 * 60 * 1000,
       })
       .status(200)
@@ -133,8 +133,8 @@ const google = async (req, res) => {
       return res
         .cookie("token", token, {
           httpOnly: true,
-          secure: false, // true in production (HTTPS)
-          sameSite: "strict",
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
           maxAge: 6 * 60 * 60 * 1000,
         })
         .status(200)
@@ -177,8 +177,8 @@ const google = async (req, res) => {
     return res
       .cookie("token", token, {
         httpOnly: true,
-        secure: false,
-        sameSite: "strict",
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
         maxAge: 6 * 60 * 60 * 1000,
       })
       .status(200)
